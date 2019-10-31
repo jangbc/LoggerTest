@@ -1,7 +1,6 @@
 package net.smartworks.log.service;
 
 import java.net.Socket;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.Appender;
@@ -14,16 +13,24 @@ import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.apache.logging.log4j.core.layout.MessageLayout;
 import org.apache.logging.log4j.message.MapMessage;
 import org.apache.logging.log4j.mongodb3.MongoDbProvider;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import com.mongodb.MongoException;
 
 @Service
 public class LoggerService {
 	static {
 		isAliveMongoDb = connectToMongoDb();
+		System.setProperty("log4j2.asyncLoggerExceptionHandler",
+				"org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
 
 		if (!LoggerService.isAliveMongoDb) {
 			System.out.println("db can not connect!!!");
 		}
+
+		System.out.println("STATICCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC");
 
 		loggerTransactions = LogManager.getLogger(LoggerService.loggerNameTransactions);
 		loggerResults = LogManager.getLogger(LoggerService.loggerNameResults);
@@ -40,6 +47,8 @@ public class LoggerService {
 	static Logger loggerTransactions;
 	static Logger loggerResults;
 	static Logger loggerLogs;
+
+	private static final boolean USE_ASYNC_APPENDER = false;
 
 	public static final String MONGODB_SERVER = "mongodb_server";
 	public static final String MONGODB_PORT = "mongodb_port";
@@ -75,28 +84,32 @@ public class LoggerService {
 		 */
 
 		if (isAliveMongoDb) {
-			loggerTransactions.debug("this is mongodb logger debug");
-			loggerTransactions.warn("this is mongodb logger warn");
-			loggerTransactions.error("this is mongodb logger error");
+			try {
+				loggerTransactions.debug("this is mongodb logger debug");
+				loggerTransactions.warn("this is mongodb logger warn");
+				loggerTransactions.error("this is mongodb logger error");
 
-			loggerResults.debug("this is mongodb logger debug");
-			loggerResults.warn("this is mongodb logger warn");
-			loggerResults.error("this is mongodb logger error");
+				loggerResults.debug("this is mongodb logger debug");
+				loggerResults.warn("this is mongodb logger warn");
+				loggerResults.error("this is mongodb logger error");
 
-			// loggerLogs.debug("this is mongodb logger debug");
-			// loggerLogs.warn("this is mongodb logger warn");
-			// loggerLogs.error("this is mongodb logger error");
+				// loggerLogs.debug("this is mongodb logger debug");
+				// loggerLogs.warn("this is mongodb logger warn");
+				// loggerLogs.error("this is mongodb logger error");
 
-			MapMessage mapMessage = new MapMessage();
-			mapMessage.put("aaaa", "AAAA");
-			mapMessage.put("bbb", "BBB");
-			mapMessage.put("cccc", "CCC");
-			mapMessage.put("dddd", "DDD");
+				MapMessage mapMessage = new MapMessage();
+				mapMessage.put("aaaa", "AAAA");
+				mapMessage.put("bbb", "BBB");
+				mapMessage.put("cccc", "CCC");
+				mapMessage.put("dddd", "DDD");
 
-			// ObjectId id = ObjectId.get();
-			// mapMessage.with(DevConstant.DOC_REC_NAME_ID, id);
+				// ObjectId id = ObjectId.get();
+				// mapMessage.with(DevConstant.DOC_REC_NAME_ID, id);
 
-			loggerLogs.info(mapMessage);
+				loggerLogs.info(mapMessage);
+			} catch (Exception ex) {
+				System.out.println("exception!!!!():" + isAliveMongoDb);
+			}
 		}
 	}
 
@@ -140,16 +153,24 @@ public class LoggerService {
 			NoSqlAppender noSqlAppenderResults = addNoSqlAppender(NOSQL_APPENDER_NAME_RESULTS, mongoDbProviderResults);
 			NoSqlAppender noSqlAppenderLogs = addNoSqlAppender(NOSQL_APPENDER_NAME_LOGS, mongoDbProviderLogs);
 
-			AsyncAppender asyncAppenderTransactions = setToAsyncLogger(NOSQL_APPENDER_NAME_TRANSACTIONS,
-					ASYNC_APPENDER_NAME_TRANSACTION, config);
-			AsyncAppender asyncAppenderResults = setToAsyncLogger(NOSQL_APPENDER_NAME_RESULTS,
-					ASYNC_APPENDER_NAME_RESULTS, config);
-			AsyncAppender asyncAppenderLogs = setToAsyncLogger(NOSQL_APPENDER_NAME_LOGS, ASYNC_APPENDER_NAME_LOGS,
-					config);
+			if (USE_ASYNC_APPENDER) {
+				AsyncAppender asyncAppenderTransactions = setToAsyncLogger(NOSQL_APPENDER_NAME_TRANSACTIONS,
+						ASYNC_APPENDER_NAME_TRANSACTION, config);
+				AsyncAppender asyncAppenderResults = setToAsyncLogger(NOSQL_APPENDER_NAME_RESULTS,
+						ASYNC_APPENDER_NAME_RESULTS, config);
+				AsyncAppender asyncAppenderLogs = setToAsyncLogger(NOSQL_APPENDER_NAME_LOGS, ASYNC_APPENDER_NAME_LOGS,
+						config);
 
-			startUpdatLogger(noSqlAppenderTransactions, asyncAppenderTransactions, loggerNameTransactions, config);
-			startUpdatLogger(noSqlAppenderResults, asyncAppenderResults, loggerNameResults, config);
-			startUpdatLogger(noSqlAppenderLogs, asyncAppenderLogs, loggerNameLogs, config);
+				startUpdatLoggerWithAsyncAppender(noSqlAppenderTransactions, asyncAppenderTransactions,
+						loggerNameTransactions, config);
+				startUpdatLoggerWithAsyncAppender(noSqlAppenderResults, asyncAppenderResults, loggerNameResults,
+						config);
+				startUpdatLoggerWithAsyncAppender(noSqlAppenderLogs, asyncAppenderLogs, loggerNameLogs, config);
+			} else {
+				startUpdatLogger(noSqlAppenderTransactions, loggerNameTransactions, config);
+				startUpdatLogger(noSqlAppenderResults, loggerNameResults, config);
+				startUpdatLogger(noSqlAppenderLogs, loggerNameLogs, config);
+			}
 
 			return true;
 		} catch (Exception ex) {
@@ -188,8 +209,8 @@ public class LoggerService {
 
 	}
 
-	private static void startUpdatLogger(NoSqlAppender noSqlAppender, AsyncAppender asyncAppender, String loggerName,
-			Configuration config) {
+	private static void startUpdatLoggerWithAsyncAppender(NoSqlAppender noSqlAppender, AsyncAppender asyncAppender,
+			String loggerName, Configuration config) {
 		config.addAppender(noSqlAppender);
 		config.addAppender(asyncAppender);
 
@@ -199,9 +220,20 @@ public class LoggerService {
 		updateLoggers(asyncAppender, config, loggerName);
 	}
 
+	private static void startUpdatLogger(NoSqlAppender noSqlAppender, String loggerName, Configuration config) {
+		config.addAppender(noSqlAppender);
+		noSqlAppender.start();
+		updateLoggers(noSqlAppender, config, loggerName);
+	}
+
 	private static void updateLoggers(final Appender appender, final Configuration config, final String loggerName) {
 
 		LoggerConfig loggerConfig = config.getLoggerConfig(loggerName);
+		// System.setProperty("log4j2.asyncLoggerExceptionHandler",
+		// "net.smartworks.log.exception.LoggerTestExceptionHandler");
+		// System.setProperty("log4j2.asyncLoggerConfigExceptionHandler",
+		// "net.smartworks.log.exception.LoggerTestExceptionHandler");
+
 		loggerConfig.addAppender(appender, null, null);
 	}
 
@@ -220,4 +252,7 @@ public class LoggerService {
 				}
 		}
 	}
+
+
+
 }
