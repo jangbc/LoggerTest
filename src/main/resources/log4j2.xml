@@ -1,51 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="DEBUG">
-
+<Configuration status="INFO" monitorInterval="30">
 	<Properties>
-		<Property name="server">10.250.172.140</Property>
-		<Property name="username"></Property>
-		<Property name="password"></Property>
+		<!-- <Property name="LOG_FORMAT">%d{HH:mm:ss} %t %p %c{1} %m%n</Property> -->
+		<Property name="LOG_FORMAT">
+			%d{yyyy-MM-dd HH:mm:ss.nnn}{GMT+9} %-5level
+			%-13.13t [%c{1}] %m%n
+		</Property>
+		<Property name="BASE_DIR">logs</Property>
+
+		<!-- fada.mall -->
+		<Property name="mongodb_server">10.250.172.140</Property>
+		<Property name="mongodb_port">27017</Property>
+		<Property name="mongodb_username"></Property>
+		<Property name="mongodb_password"></Property>
+
+		<Property name="mongodb_name">fadaLogDb_TEST</Property>
+		<Property name="collection_transactions">transactions</Property>
+		<Property name="collection_results">results</Property>
+		<Property name="collection_logs">logs</Property>
+
+		<Property name="logger_name_transactions">fada.mall.logging.transactions</Property>
+		<Property name="logger_name_results">fada.mall.logging.results</Property>
+		<Property name="logger_name_logs">fada.mall.logging.logs</Property>
 	</Properties>
-	<!-- ${bbb} -->
 
 	<Appenders>
-		<Console name="LogToConsole" target="SYSTEM_OUT">
-			<PatternLayout
-				pattern="%d{HH:mm:ss.SSS} 
-			[%t] %-5level %logger{36} - %msg%n" />
+		<Console name="Console" target="SYSTEM_OUT" follow="true">
+			<PatternLayout pattern="${LOG_FORMAT}" />
 		</Console>
-		<File name="LogToFile" fileName="logs/app.log">
-			<PatternLayout>
-				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
-			</PatternLayout>
-		</File>
-
-		<NoSql name="nosqlLogTestAppender">
-			<MongoDb3 databaseName="logTestDb"
-				collectionName="logTestCollection" server="${server}"
-				username="${username}" password="${password}" />
-			<MessageLayout />
-		</NoSql>
-
-<!-- 		<Async name="asyncLogTestAppender">
-			<AppenderRef ref="nosqlLogTestAppender" />
-		</Async> -->
+		<RollingFile name="File" fileName="${BASE_DIR}/fada.log"
+			filePattern="${BASE_DIR}/fada.%d{yyyyMMdd}.log">
+			<PatternLayout pattern="${LOG_FORMAT}" />
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+			</Policies>
+			<DefaultRolloverStrategy>
+				<Delete basePath="${BASE_DIR}">
+					<IfFileName glob="*.log" />
+					<IfLastModified age="30d" />
+				</Delete>
+			</DefaultRolloverStrategy>
+		</RollingFile>
 	</Appenders>
-	<Loggers>
-		<Logger name="net.smartworks" level="debug" additivity="false">
-			<AppenderRef ref="LogToFile" />
-			<!-- <AppenderRef ref="LogToConsole"/> -->
-		</Logger>
-		<!-- <Logger name="org.springframework.boot" level="error" additivity="false"> 
-			<AppenderRef ref="LogToConsole"/> </Logger> -->
-		<Root level="error">
-			<AppenderRef ref="LogToFile" />
-			<!-- <AppenderRef ref="LogToConsole"/> -->
-		</Root>
 
-<!-- 		<AsyncLogger name="net.smartworks.logger.mongodb"
+	<Loggers>
+		<Root level="info">
+			<AppenderRef ref="Console" />
+			<AppenderRef ref="File" />
+		</Root>
+		<Logger name="com.miip" level="debug">
+		</Logger>
+		<Logger name="org.apache.kafka.clients.producer.ProducerConfig"
+			level="warn" additivity="false">
+			<AppenderRef ref="Console" />
+			<AppenderRef ref="File" />
+		</Logger>
+
+		<!-- fada.mall -->
+		<AsyncLogger name="${logger_name_transactions}"
 			level="INFO" additivity="false">
-			<AppenderRef ref="asyncLogTestAppender" />
-		</AsyncLogger> -->
+		</AsyncLogger>
+		<AsyncLogger name="${logger_name_results}" level="INFO"
+			additivity="false">
+		</AsyncLogger>
+		<AsyncLogger name="${logger_name_logs}" level="INFO"
+			additivity="false">
+		</AsyncLogger>
 	</Loggers>
 </Configuration>

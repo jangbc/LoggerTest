@@ -15,10 +15,12 @@ public class LoggerTestApplication {
 
 	public static void main(String[] args) {
 		
-		final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
-		final Configuration config = ctx.getConfiguration();
-		config.getRootLogger().removeAppender("nosqlLogTestAppender");
-		ctx.updateLoggers();
+		/*
+		 * final LoggerContext ctx = (LoggerContext) LogManager.getContext(false); final
+		 * Configuration config = ctx.getConfiguration();
+		 * config.getRootLogger().removeAppender("nosqlLogTestAppender");
+		 * ctx.updateLoggers();
+		 */
 		
 		SpringApplication.run(LoggerTestApplication.class, args);
 	}
