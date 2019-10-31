@@ -26,11 +26,4 @@ public class LogTestController {
 		return "Log Test";
 
 	}
-	
-	@ExceptionHandler(value = MongoException.class)
-	public ResponseEntity<String> handle(Exception ex) {
-
-		System.out.println("exception!!!!@ExceptionHandler");
-		return null;
-	}
 }

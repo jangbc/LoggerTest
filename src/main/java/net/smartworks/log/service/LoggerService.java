@@ -23,8 +23,8 @@ import com.mongodb.MongoException;
 public class LoggerService {
 	static {
 		isAliveMongoDb = connectToMongoDb();
-		System.setProperty("log4j2.asyncLoggerExceptionHandler",
-				"org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
+		System.setProperty("AsyncLogger.ExceptionHandler", "net.smartworks.log.exception.LoggerTestExceptionHandler");
+		System.setProperty("log4j2.contextSelector", "org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
 
 		if (!LoggerService.isAliveMongoDb) {
 			System.out.println("db can not connect!!!");
@@ -253,6 +253,10 @@ public class LoggerService {
 		}
 	}
 
+	@ExceptionHandler(value = MongoException.class)
+	public ResponseEntity<String> handle(Exception ex) {
 
-
+		System.out.println("exception!!!!@ExceptionHandler");
+		return null;
+	}
 }

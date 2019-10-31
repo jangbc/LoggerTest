@@ -2,7 +2,7 @@ package net.smartworks.log.exception;
 
 public class LoggerTestExceptionHandler implements com.lmax.disruptor.ExceptionHandler {
 
-	public void LoggerTestExceptionHandler() {
+	public LoggerTestExceptionHandler() {
 
 	}
 
