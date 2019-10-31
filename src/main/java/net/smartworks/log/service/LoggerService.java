@@ -88,69 +88,6 @@ public class LoggerService {
 		}
 	}
 
-	/*
-	 * public static boolean connectToMongoDb() {
-	 * 
-	 * try { LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
-	 * Configuration config = ctx.getConfiguration();
-	 * 
-	 * String server =
-	 * config.getStrSubstitutor().getVariableResolver().lookup(MONGODB_SERVER);
-	 * String username =
-	 * config.getStrSubstitutor().getVariableResolver().lookup(MONGODB_USERNAME);
-	 * String password =
-	 * config.getStrSubstitutor().getVariableResolver().lookup(MONGODB_PASSWORD);
-	 * String dbName =
-	 * config.getStrSubstitutor().getVariableResolver().lookup(MONGODB_NAME);
-	 * 
-	 * String collectionTransactions =
-	 * config.getStrSubstitutor().getVariableResolver()
-	 * .lookup(COLLECTION_NAME_TRANSACTIONS); String collectionResults =
-	 * config.getStrSubstitutor().getVariableResolver().lookup(
-	 * COLLECTION_NAME_RESULTS); String collectionLogs =
-	 * config.getStrSubstitutor().getVariableResolver().lookup(COLLECTION_NAME_LOGS)
-	 * ;
-	 * 
-	 * String loggerNameTransactions =
-	 * config.getStrSubstitutor().getVariableResolver()
-	 * .lookup(LOGGER_NAME_TRANSACTIONS); String loggerNameResults =
-	 * config.getStrSubstitutor().getVariableResolver().lookup(LOGGER_NAME_RESULTS);
-	 * String loggerNameLogs =
-	 * config.getStrSubstitutor().getVariableResolver().lookup(LOGGER_NAME_LOGS);
-	 * 
-	 * 
-	 * 
-	 * MongoDbProvider mongoDbProvider =
-	 * MongoDbProvider.newBuilder().setCollectionName("logTestCollection")
-	 * .setDatabaseName("logTestDb").setServer("10.250.172.40").setUserName("").
-	 * setPassword("").build();
-	 * 
-	 * MessageLayout messageLayout = (MessageLayout) MessageLayout.createLayout();
-	 * 
-	 * final NoSqlAppender noSqlAppender =
-	 * NoSqlAppender.newBuilder().setName("nosqlLogTestAppender")
-	 * .setProvider(mongoDbProvider).setLayout(messageLayout).build();
-	 * 
-	 * AppenderRef appenderRef =
-	 * AppenderRef.createAppenderRef("nosqlLogTestAppender", null, null);
-	 * 
-	 * AppenderRef[] appenderRefs = new AppenderRef[] { appenderRef };
-	 * 
-	 * final AsyncAppender asyncAppender =
-	 * AsyncAppender.newBuilder().setAppenderRefs(appenderRefs)
-	 * .setName("asyncLogTestAppender").setConfiguration(config).build();
-	 * 
-	 * config.addAppender(noSqlAppender); config.addAppender(asyncAppender);
-	 * 
-	 * noSqlAppender.start(); asyncAppender.start();
-	 * 
-	 * updateLoggers(asyncAppender, config, "net.smartworks.logger.mongodb");
-	 * 
-	 * return true; } catch (Exception ex) {
-	 * 
-	 * } return false; }
-	 */
-
 	public static boolean connectToMongoDb() {
 
 		try {
