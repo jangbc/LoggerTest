@@ -12,6 +12,7 @@ import org.apache.logging.log4j.core.config.AppenderRef;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.apache.logging.log4j.core.layout.MessageLayout;
+import org.apache.logging.log4j.message.MapMessage;
 import org.apache.logging.log4j.mongodb3.MongoDbProvider;
 import org.springframework.stereotype.Service;
 
@@ -82,9 +83,20 @@ public class LoggerService {
 			loggerResults.warn("this is mongodb logger warn");
 			loggerResults.error("this is mongodb logger error");
 
-			loggerLogs.debug("this is mongodb logger debug");
-			loggerLogs.warn("this is mongodb logger warn");
-			loggerLogs.error("this is mongodb logger error");
+			// loggerLogs.debug("this is mongodb logger debug");
+			// loggerLogs.warn("this is mongodb logger warn");
+			// loggerLogs.error("this is mongodb logger error");
+
+			MapMessage mapMessage = new MapMessage();
+			mapMessage.put("aaaa", "AAAA");
+			mapMessage.put("bbb", "BBB");
+			mapMessage.put("cccc", "CCC");
+			mapMessage.put("dddd", "DDD");
+
+			// ObjectId id = ObjectId.get();
+			// mapMessage.with(DevConstant.DOC_REC_NAME_ID, id);
+
+			loggerLogs.info(mapMessage);
 		}
 	}
 
@@ -95,7 +107,7 @@ public class LoggerService {
 			Configuration config = ctx.getConfiguration();
 
 			String server = config.getStrSubstitutor().getVariableResolver().lookup(MONGODB_SERVER);
-			String port = config.getStrSubstitutor().getVariableResolver().lookup(MONGODB_SERVER);
+			String port = config.getStrSubstitutor().getVariableResolver().lookup(MONGODB_PORT);
 
 			boolean canConnect = serverListening(server, Integer.parseInt(port));
 

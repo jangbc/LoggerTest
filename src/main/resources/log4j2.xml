@@ -9,7 +9,7 @@
 		<Property name="BASE_DIR">logs</Property>
 
 		<!-- fada.mall -->
-		<Property name="mongodb_server">10.250.172.140</Property>
+		<Property name="mongodb_server">10.250.172.40</Property>
 		<Property name="mongodb_port">27017</Property>
 		<Property name="mongodb_username"></Property>
 		<Property name="mongodb_password"></Property>
