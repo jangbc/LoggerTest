@@ -7,6 +7,7 @@
 			%-13.13t [%c{1}] %m%n
 		</Property>
 		<Property name="BASE_DIR">logs</Property>
+		<Property name="fada-mall-log-path">logs/fada-mall</Property>
 
 		<!-- fada.mall -->
 		<Property name="mongodb_server">10.250.172.40</Property>
@@ -22,6 +23,10 @@
 		<Property name="logger_name_transactions">fada.mall.logging.transactions</Property>
 		<Property name="logger_name_results">fada.mall.logging.results</Property>
 		<Property name="logger_name_logs">fada.mall.logging.logs</Property>
+
+		<Property name="logger_name_file_transactions">fada.mall.logging.file.transactions</Property>
+		<Property name="logger_name_file_results">fada.mall.logging.file.results</Property>
+		<Property name="logger_name_file_logs">fada.mall.logging.file.logs</Property>
 	</Properties>
 
 	<Appenders>
@@ -48,12 +53,30 @@
 				<Pattern>%d %p %c{1.} [%t] %m %ex%n</Pattern>
 			</PatternLayout>
 		</RandomAccessFile>
+
+		<!-- fada.mall -->
+		<RollingFile name="asyncTransactionsFileAppender"
+			fileName="${fada-mall-log-path}/fada-transactions.log"
+			filePattern="${fada-mall-log-path}/%d{yyyyMMdd}_fada-transactions-%i.log">
+			<!-- <JSONLayout complete="true" compact="false" /> -->
+			<JsonLayout compact="true" eventEol="true"
+				endOfLine="\r\n" includeStacktrace="false"
+				objectMessageAsJsonObject="true">
+				<!-- <KeyValuePair key="additionalField1" value="constant value" /> <KeyValuePair 
+					key="additionalField2" value="$${ctx:key}" /> -->
+			</JsonLayout>
+			<Policies>
+				<SizeBasedTriggeringPolicy size="100 KB" />
+			</Policies>
+			<DefaultRolloverStrategy max="4" />
+		</RollingFile>
 	</Appenders>
 
 	<Loggers>
 		<Root level="info">
 			<AppenderRef ref="Console" />
 			<AppenderRef ref="File" />
+			<AppenderRef ref="RandomAccessFile" />
 		</Root>
 		<Logger name="com.miip" level="debug">
 		</Logger>
@@ -65,17 +88,19 @@
 
 		<!-- fada.mall -->
 		<AsyncLogger name="${logger_name_transactions}"
-			level="INFO" additivity="false">
+			level="INFO" additivity="false" includeLocation="false">
 		</AsyncLogger>
 		<AsyncLogger name="${logger_name_results}" level="INFO"
-			additivity="false">
+			additivity="false" includeLocation="false">
 		</AsyncLogger>
 		<AsyncLogger name="${logger_name_logs}" level="INFO"
-			additivity="false">
+			additivity="false" includeLocation="false">
 		</AsyncLogger>
 
-		<Root level="info" includeLocation="false">
-			<AppenderRef ref="RandomAccessFile" />
-		</Root>
+		<!-- fada.mall.file -->
+		<AsyncLogger name="${logger_name_file_transactions}"
+			level="INFO" additivity="false" includeLocation="false">
+			<AppenderRef ref="asyncTransactionsFileAppender" />
+		</AsyncLogger>
 	</Loggers>
 </Configuration>
