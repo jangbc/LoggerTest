@@ -29,13 +29,10 @@ import com.mongodb.MongoException;
 public class LoggerService {
 	static {
 		isConfiguredMongoDbAppender = configureLog4jAppender();
-		System.setProperty("AsyncLogger.ExceptionHandler", "net.smartworks.log.exception.LoggerTestExceptionHandler");
-		System.setProperty("log4j2.contextSelector", "org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
 
 		if (!LoggerService.isAliveMongoDb) {
 			System.out.println("db can not connect!!!");
 		}
-
 		System.out.println("STATICCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC");
 	}
 

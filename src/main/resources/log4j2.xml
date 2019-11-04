@@ -59,9 +59,11 @@
 			fileName="${fada-mall-log-path}/fada-transactions.log"
 			filePattern="${fada-mall-log-path}/%d{yyyyMMdd}_fada-transactions-%i.log">
 			<!-- <JSONLayout complete="true" compact="false" /> -->
+			<!-- <JsonLayout compact="true" eventEol="true" endOfLine="\r\n" includeStacktrace="false" 
+				objectMessageAsJsonObject="true"> <KeyValuePair key="additionalField1" value="constant 
+				value" /> <KeyValuePair key="additionalField2" value="$${ctx:key}" /> </JsonLayout> -->
 			<JsonLayout compact="true" eventEol="true"
-				endOfLine="\r\n" includeStacktrace="false"
-				objectMessageAsJsonObject="true">
+				includeStacktrace="false" objectMessageAsJsonObject="true">
 				<!-- <KeyValuePair key="additionalField1" value="constant value" /> <KeyValuePair 
 					key="additionalField2" value="$${ctx:key}" /> -->
 			</JsonLayout>
