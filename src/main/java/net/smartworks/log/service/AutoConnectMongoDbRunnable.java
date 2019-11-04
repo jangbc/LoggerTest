@@ -17,7 +17,6 @@ public class AutoConnectMongoDbRunnable implements Runnable {
 			try {
 				Thread.sleep(30000);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

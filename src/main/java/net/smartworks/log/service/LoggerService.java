@@ -141,7 +141,7 @@ public class LoggerService {
 
 				ObjectMessage msg = new ObjectMessage(map);
 
-				loggerFileTransactions.info(msg);
+				loggerFileLogs.info(msg);
 
 				// loggerFileTransactions.info(mapMessage);
 				System.out.println("File Appender");

@@ -56,18 +56,44 @@
 
 		<!-- fada.mall -->
 		<RollingFile name="asyncTransactionsFileAppender"
-			fileName="${fada-mall-log-path}/fada-transactions.log"
-			filePattern="${fada-mall-log-path}/fada-transactions_%d{yyyyMMdd-HHmm}_%i.log"
+			fileName="${fada-mall-log-path}/transactions/transactions.log"
+			filePattern="${fada-mall-log-path}/transactions/transactions_%d{yyyyMMdd-HHmm}_%i.log"
 			immediateFlush="flase">
 			>
-			<!-- <JSONLayout complete="true" compact="false" /> -->
-			<!-- <JsonLayout compact="true" eventEol="true" endOfLine="\r\n" includeStacktrace="false" 
-				objectMessageAsJsonObject="true"> <KeyValuePair key="additionalField1" value="constant 
-				value" /> <KeyValuePair key="additionalField2" value="$${ctx:key}" /> </JsonLayout> -->
 			<JsonLayout compact="true" eventEol="true"
 				includeStacktrace="false" objectMessageAsJsonObject="true">
-				<!-- <KeyValuePair key="additionalField1" value="constant value" /> <KeyValuePair 
-					key="additionalField2" value="$${ctx:key}" /> -->
+			</JsonLayout>
+			<Policies>
+				<SizeBasedTriggeringPolicy size="100 MB" />
+				<TimeBasedTriggeringPolicy interval="1"
+					modulate="true" />
+			</Policies>
+			<DefaultRolloverStrategy max="500" />
+		</RollingFile>
+
+		<RollingFile name="asyncTransactionResultsFileAppender"
+			fileName="${fada-mall-log-path}/results/results.log"
+			filePattern="${fada-mall-log-path}/results/results_%d{yyyyMMdd-HHmm}_%i.log"
+			immediateFlush="flase">
+			>
+			<JsonLayout compact="true" eventEol="true"
+				includeStacktrace="false" objectMessageAsJsonObject="true">
+			</JsonLayout>
+			<Policies>
+				<SizeBasedTriggeringPolicy size="100 MB" />
+				<TimeBasedTriggeringPolicy interval="1"
+					modulate="true" />
+			</Policies>
+			<DefaultRolloverStrategy max="500" />
+		</RollingFile>
+
+		<RollingFile name="asyncLogsFileAppender"
+			fileName="${fada-mall-log-path}/logs/logs.log"
+			filePattern="${fada-mall-log-path}/logs/logs_%d{yyyyMMdd-HHmm}_%i.log"
+			immediateFlush="flase">
+			>
+			<JsonLayout compact="true" eventEol="true"
+				includeStacktrace="false" objectMessageAsJsonObject="true">
 			</JsonLayout>
 			<Policies>
 				<SizeBasedTriggeringPolicy size="100 MB" />
@@ -107,6 +133,14 @@
 		<AsyncLogger name="${logger_name_file_transactions}"
 			level="INFO" additivity="false" includeLocation="false">
 			<AppenderRef ref="asyncTransactionsFileAppender" />
+		</AsyncLogger>
+		<AsyncLogger name="${logger_name_file_results}"
+			level="INFO" additivity="false" includeLocation="false">
+			<AppenderRef ref="asyncTransactionResultsFileAppender" />
+		</AsyncLogger>
+		<AsyncLogger name="${logger_name_file_logs}" level="INFO"
+			additivity="false" includeLocation="false">
+			<AppenderRef ref="asyncLogsFileAppender" />
 		</AsyncLogger>
 	</Loggers>
 </Configuration>
