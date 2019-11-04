@@ -47,14 +47,19 @@
 			</DefaultRolloverStrategy>
 		</RollingFile>
 
-		<!-- <RandomAccessFile name="RandomAccessFile" fileName="async.log" immediateFlush="false" 
-			append="false"> <PatternLayout> <Pattern>%d %p %c{1.} [%t] %m %ex%n</Pattern> 
-			</PatternLayout> </RandomAccessFile> -->
+		<RandomAccessFile name="RandomAccessFile"
+			fileName="async.log" immediateFlush="false" append="false">
+			<PatternLayout>
+				<Pattern>%d %p %c{1.} [%t] %m %ex%n</Pattern>
+			</PatternLayout>
+		</RandomAccessFile>
 
 		<!-- fada.mall -->
 		<RollingFile name="asyncTransactionsFileAppender"
 			fileName="${fada-mall-log-path}/fada-transactions.log"
-			filePattern="${fada-mall-log-path}/%d{yyyyMMdd}_fada-transactions-%i.log">
+			filePattern="${fada-mall-log-path}/fada-transactions_%d{yyyyMMdd-HHmm}_%i.log"
+			immediateFlush="flase">
+			>
 			<!-- <JSONLayout complete="true" compact="false" /> -->
 			<!-- <JsonLayout compact="true" eventEol="true" endOfLine="\r\n" includeStacktrace="false" 
 				objectMessageAsJsonObject="true"> <KeyValuePair key="additionalField1" value="constant 
@@ -65,9 +70,11 @@
 					key="additionalField2" value="$${ctx:key}" /> -->
 			</JsonLayout>
 			<Policies>
-				<SizeBasedTriggeringPolicy size="100 KB" />
+				<SizeBasedTriggeringPolicy size="100 MB" />
+				<TimeBasedTriggeringPolicy interval="1"
+					modulate="true" />
 			</Policies>
-			<DefaultRolloverStrategy max="4" />
+			<DefaultRolloverStrategy max="500" />
 		</RollingFile>
 	</Appenders>
 
@@ -75,7 +82,7 @@
 		<Root level="info">
 			<AppenderRef ref="Console" />
 			<AppenderRef ref="File" />
-			<AppenderRef ref="RandomAccessFile" />
+			<!-- <AppenderRef ref="RandomAccessFile" /> -->
 		</Root>
 		<Logger name="com.miip" level="debug">
 		</Logger>
