@@ -57,7 +57,7 @@
 		<!-- fada.mall -->
 		<RollingFile name="asyncTransactionsFileAppender"
 			fileName="${fada-mall-log-path}/transactions/transactions.log"
-			filePattern="${fada-mall-log-path}/transactions/transactions_%d{yyyyMMdd-HHmm}_%i.log"
+			filePattern="${fada-mall-log-path}/transactions/%d{yyyyMMdd}/transactions_%d{yyyyMMdd-HHmm}_%i.log"
 			immediateFlush="flase">
 			>
 			<JsonLayout compact="true" eventEol="true"
@@ -73,7 +73,7 @@
 
 		<RollingFile name="asyncTransactionResultsFileAppender"
 			fileName="${fada-mall-log-path}/results/results.log"
-			filePattern="${fada-mall-log-path}/results/results_%d{yyyyMMdd-HHmm}_%i.log"
+			filePattern="${fada-mall-log-path}/results/%d{yyyyMMdd}/results_%d{yyyyMMdd-HHmm}_%i.log"
 			immediateFlush="flase">
 			>
 			<JsonLayout compact="true" eventEol="true"
@@ -89,7 +89,7 @@
 
 		<RollingFile name="asyncLogsFileAppender"
 			fileName="${fada-mall-log-path}/logs/logs.log"
-			filePattern="${fada-mall-log-path}/logs/logs_%d{yyyyMMdd-HHmm}_%i.log"
+			filePattern="${fada-mall-log-path}/logs/%d{yyyyMMdd}/logs_%d{yyyyMMdd-HHmm}_%i.log"
 			immediateFlush="flase">
 			>
 			<JsonLayout compact="true" eventEol="true"
