@@ -1,8 +1,15 @@
 package net.smartworks.log.service;
 
+import java.io.IOException;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -150,6 +157,22 @@ public class LoggerService {
 
 		long diffTime = System.currentTimeMillis() - firstTime;
 		System.out.println("diff Time!!!!!!!!!!!!!!::" + diffTime);
+	}
+
+	public void printLogHelloWorld2() {
+		System.out.println("printLogHelloWorld2()");
+
+		try (Stream<Path> walk = Files.walk(Paths.get("C:\\projects"))) {
+
+			List<String> result = walk.filter(Files::isRegularFile).map(x -> x.toString())
+					.filter(f -> f.endsWith(".txt2")).collect(Collectors.toList());
+
+			result.forEach(System.out::println);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	public static boolean configureLog4jAppender() {

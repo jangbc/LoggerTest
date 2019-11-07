@@ -26,4 +26,12 @@ public class LogTestController {
 		return "Log Test";
 
 	}
+	
+	@RequestMapping(value = "/log/test2", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	public String logTest2() {
+		loggerService.printLogHelloWorld2();
+		return "Log Test";
+
+	}
 }
